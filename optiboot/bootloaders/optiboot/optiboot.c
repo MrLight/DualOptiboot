@@ -1,6 +1,70 @@
 #define FUNC_READ 1
 #define FUNC_WRITE 1
-//#define ANARDUINO 1
+
+//////////////////////////////////////////////////////////////////////////
+//
+// DualOptiboot for miniwireless devices
+// This Code is based on the DualOptiboot Code for Monteino
+// But supports the flashdevice on the miniwireless
+//
+// Optiboot based custom bootloader for Moteino
+// Enables wireless programming of Moteino wireless arduino clone
+// Copyright Felix Rusu (2013), felix@lowpowerlab.com
+// http://lowpowerlab.com/Moteino
+//
+//////////////////////////////////////////////////////////////////////////
+//
+// This program is free software; you can redistribute it
+// and/or modify it under the terms of the GNU General
+// Public License as published by the Free Software
+// Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will
+// be useful, but WITHOUT ANY WARRANTY; without even the
+// implied warranty of MERCHANTABILITY or FITNESS FOR A
+// PARTICULAR PURPOSE.  See the GNU General Public
+// License for more details.
+//
+// You should have received a copy of the GNU General
+// Public License along with this program; if not, write
+// to the Free Software Foundation, Inc.,
+// 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+//
+// Licence can be viewed at
+// http://www.fsf.org/licenses/gpl.txt
+//
+// Please maintain this license information along with authorship
+// and copyright notices in any redistribution of this code
+//
+//////////////////////////////////////////////////////////////////////////
+//
+// This Optiboot version is modified to add the capability of reflashing
+// from an external SPI flash memory chip. As configured this will work
+// with Moteino (www.lowpowerlab.com/Moteino) provided a SPI flash chip
+// is present on the dedicated onboard footprint.
+// Summary of how this Optiboot version works:
+// - it looks for an external flash chip
+// - if one is found (SPI returns valid data) it will further look
+//   for a new sketch flash image signature and size
+//   starting at address 0:   FLXIMG:NN:XXXXXXXXXXX
+//   where: - 'FLXIMG' is fixed signature indicating FLASH chip
+//            contains a valid new flash image to be burned
+//          - 'NN' are 2 size bytes (uint_16) indicating how long the
+//            new flash image is (how many bytes to read), max 65536Bytes
+//          - 'XXXXXX' are the de-hexified bytes of the flash
+//            pages to be burned
+//          - ':' colons have fixed positions (delimiters)
+// - if no valid signature/size are found, it will skip and
+//   function as it normally would (listen to STK500 protocol on serial port)
+//
+// The added code will result in a compiled size of just under 1kb
+// (Originally Optiboot takes just under 0.5kb)
+// - Examples at: http://lowpowerlab.com/blog/category/moteino/wireless-programming/
+// - Tested on atmega328P and atmega644/1284P
+// - Limited to 31K sketches for atmega328p and 64K sketches for atmega1284P.
+//////////////////////////////////////////////////////////////////////////
+
 /**********************************************************/
 /* Optiboot bootloader for Arduino                        */
 /*                                                        */

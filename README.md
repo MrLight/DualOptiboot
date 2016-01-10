@@ -1,5 +1,4 @@
 ## DualOptiboot Bootloader for miniwireless Boards ##
-=================================================
 
 This is a custom Optiboot Bootloader, which adds support for wireless programming.
 This bootloader is strongly based on the DualOptiboot from lowpowerlab.
