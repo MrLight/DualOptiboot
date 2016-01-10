@@ -1,0 +1,72 @@
+#
+# Makefile for "custom" platforms.   Add your board here.
+#
+# * Copyright 2013-2015 by Bill Westfield.  Part of Optiboot.
+# * This software is licensed under version 2 of the Gnu Public Licence.
+# * See optiboot.c for details.
+
+
+wildfire: TARGET = $@
+wildfire: CHIP = atmega1284p
+wildfire:
+	$(MAKE) $(CHIP) AVR_FREQ=16000000L LED=B5
+	mv $(PROGRAM)_$(CHIP).hex $(PROGRAM)_$(TARGET).hex
+	mv $(PROGRAM)_$(CHIP).lst $(PROGRAM)_$(TARGET).lst
+
+miniwireless: TARGET = miniwireless
+miniwireless: MCU_TARGET = atmega328p
+#LED is on D9 (PORTB1)
+miniwireless: LED = B1 
+miniwireless: CFLAGS += $(COMMON_OPTIONS)
+#FLASHSS is on D5(PIND5)
+miniwireless: CFLAGS += '-DLED=B1' -DANARDUINO -DOPTIBOOT_CUSTOMVER=20
+miniwireless: AVR_FREQ ?= 16000000L
+miniwireless: LDSECTIONS  = -Wl,--section-start=.text=0x7c00 -Wl,--section-start=.version=0x7ffe
+miniwireless: $(PROGRAM)_miniwireless.hex
+miniwireless: $(PROGRAM)_miniwireless.lst
+
+miniwireless_isp: miniwireless_debug
+miniwireless_isp: TARGET = miniwireless_debug
+miniwireless_isp: MCU_TARGET = atmega328p
+# 512 byte boot, SPIEN
+#miniwireless_isp: HFUSE ?= DC
+# 1024 byte boot, SPIEN
+miniwireless_isp: HFUSE ?= DA
+# 2048 byte boot, SPIEN
+#miniwireless_isp: HFUSE ?= D8
+# Low power xtal (16MHz) 16KCK/14CK+65ms
+# miniwireless_isp: LFUSE ?= FF
+# LowPowerLab
+miniwireless_isp: LFUSE ?= DE
+# 2.7V brownout
+miniwireless_isp: EFUSE ?= 05
+miniwireless_isp: isp
+
+miniwireless_debug: TARGET = miniwireless_debug
+miniwireless_debug: MCU_TARGET = atmega328p
+#LED is on D9 (PORTB1)
+miniwireless_debug: LED = B1 
+miniwireless_debug: CFLAGS += $(COMMON_OPTIONS)
+#FLASHSS is on D5(PIND5)
+miniwireless_debug: CFLAGS += '-DLED=B1' -DANARDUINO -DDEBUG_ON -DOPTIBOOT_CUSTOMVER=20
+miniwireless_debug: AVR_FREQ ?= 16000000L
+miniwireless_debug: LDSECTIONS  = -Wl,--section-start=.text=0x7800 -Wl,--section-start=.version=0x7ffe
+miniwireless_debug: $(PROGRAM)_miniwireless_debug.hex
+miniwireless_debug: $(PROGRAM)_miniwireless_debug.lst
+
+miniwireless_debug_isp: miniwireless_debug
+miniwireless_debug_isp: TARGET = miniwireless_debug
+miniwireless_debug_isp: MCU_TARGET = atmega328p
+# 512 byte boot, SPIEN
+#miniwireless_debug_isp: HFUSE ?= DC
+# 1024 byte boot, SPIEN
+#miniwireless_debug_isp: HFUSE ?= DA
+# 2048 byte boot, SPIEN
+miniwireless_debug_isp: HFUSE ?= D8
+# Low power xtal (16MHz) 16KCK/14CK+65ms
+# miniwireless_debug_isp: LFUSE ?= FF
+# LowPowerLab
+miniwireless_debug_isp: LFUSE ?= DE
+# 2.7V brownout
+miniwireless_debug_isp: EFUSE ?= 05
+miniwireless_debug_isp: isp

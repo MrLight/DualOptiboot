@@ -1,0 +1,56 @@
+# Template file for generating the .json file that the Arduino IDE
+# "Boards Manager" wants to see.  This file must be pre-processed
+# before it will be valid:
+#  Strip comments.
+#  Replace variables:
+#   %VERSION% gets the Optiboot Version
+#   %HASH% gets the SHA-256 has for the .zip file.
+#    (generate with: openssl dgst -sha256 optiboot.zip | sed -e 's/.* //'
+#   %SIZE% gets the size of the .zip file
+#
+{
+  "packages": [
+    {
+      "name": "Optiboot",
+      "maintainer": "westfw",
+      "websiteURL": "https://github.com/Optiboot/optiboot",
+      "email": "",
+      "help": {
+        "online": ""
+      },
+      "platforms": [
+        {
+          "name": "Optiboot %VERSION%",
+          "architecture": "avr",
+          "version": "0.%VERSION%",
+#
+# 3r party packages must use "Contributed"
+#
+          "category": "Contributed",
+          "help": {
+	    "online": "https://github.com/Optiboot/optiboot/wiki"
+          },
+          "url": "https://github.com/Optiboot/optiboot/releases/download/v%VERSION%/optiboot.zip",
+          "archiveFileName": "optiboot.zip",
+#
+# Package file verification data
+#
+          "checksum": "SHA-256:%HASH%",
+          "size": "%SIZE%",
+#
+          "boards": [
+            {"name": "New Optiboot"}
+          ],
+          "toolsDependencies": [
+            {
+              "packager": "arduino",
+              "name": "avrdude",
+              "version": "6.0.1-arduino5"
+            }
+          ]
+        }
+      ],
+      "tools": []
+    }
+  ]
+}
